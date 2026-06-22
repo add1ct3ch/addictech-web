@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Addictech — Asesoría, Configuración y Ensamble de Equipos de Alto Rendimiento</title>
+<meta name="description" content="Asesoría técnica, configuración y ensamble de PC de alto rendimiento. Equipos a medida para gaming, edición y trabajo profesional.">
+<style>
+  :root{
+    --ink:#14151A;
+    --ink-soft:#1D1F26;
+    --bone:#F2F1EA;
+    --bone-dim:#C9C7BC;
+    --copper:#C99B4A;
+    --copper-bright:#E0B96A;
+    --pcb-green:#5C7A5E;
+    --line: rgba(242,241,234,0.12);
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+    --sans: 'Archivo', 'Arial Narrow', sans-serif;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background:var(--ink);
+    color:var(--bone);
+    font-family:var(--sans);
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+
+  /* Circuit grid background */
+  .pcb-bg{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    opacity:0.5;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+  }
+
+  a{ color:inherit; text-decoration:none; }
+
+  .wrap{
+    max-width:1140px;
+    margin:0 auto;
+    padding:0 28px;
+    position:relative;
+    z-index:1;
+  }
+
+  /* ===== HEADER ===== */
+  header{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(20,21,26,0.88);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 0;
+  }
+  .logo{
+    font-family:var(--mono);
+    font-weight:700;
+    font-size:1.05rem;
+    letter-spacing:0.06em;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .logo-img{
+    height:42px;
+    width:auto;
+    display:block;
+    filter: drop-shadow(0 0 6px rgba(212,158,90,0.15));
+  }
+  .logo small{
+    font-family:var(--mono);
+    font-weight:400;
+    color:var(--bone-dim);
+    font-size:0.62rem;
+    letter-spacing:0.1em;
+    display:block;
+  }
+  .navlinks{
+    display:flex;
+    gap:34px;
+    font-family:var(--mono);
+    font-size:0.78rem;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+  }
+  .navlinks a{
+    color:var(--bone-dim);
+    position:relative;
+    padding-bottom:4px;
+    transition:color .2s ease;
+  }
+  .navlinks a:hover{ color:var(--copper-bright); }
+  .navlinks a::after{
+    content:'';
+    position:absolute;
+    left:0; bottom:0;
+    width:0%; height:1px;
+    background:var(--copper);
+    transition:width .25s ease;
+  }
+  .navlinks a:hover::after{ width:100%; }
+  .nav-cta{
+    font-family:var(--mono);
+    font-size:0.75rem;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    border:1px solid var(--copper);
+    color:var(--copper-bright);
+    padding:9px 16px;
+    transition: all .2s ease;
+    white-space:nowrap;
+  }
+  .nav-cta:hover{ background:var(--copper); color:var(--ink); }
+  .menu-toggle{ display:none; }
+
+  /* ===== HERO ===== */
+  .hero{
+    padding:96px 0 80px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero-bg{
+    position:absolute;
+    inset:0;
+    z-index:0;
+    overflow:hidden;
+  }
+  .hero-bg img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    opacity:0.9;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap:50px;
+    align-items:start;
+    position:relative;
+    z-index:2;
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:0.78rem;
+    color:var(--pcb-green);
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    margin-bottom:18px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{
+    content:'';
+    width:24px; height:1px;
+    background:var(--pcb-green);
+  }
+  h1{
+    font-family:var(--sans);
+    font-weight:800;
+    font-size:clamp(2.4rem, 5vw, 3.6rem);
+    line-height:1.04;
+    letter-spacing:-0.01em;
+    text-transform:uppercase;
+    margin-bottom:22px;
+  }
+  h1 em{
+    font-style:normal;
+    color:var(--copper);
+  }
+  .hero-sub{
+    color:var(--bone-dim);
+    font-size:1.05rem;
+    max-width:48ch;
+    margin-bottom:34px;
+  }
+  .hero-actions{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .btn-primary{
+    font-family:var(--mono);
+    font-size:0.85rem;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    background:var(--copper);
+    color:var(--ink);
+    padding:15px 26px;
+    font-weight:700;
+    transition:background .2s ease, transform .2s ease;
+  }
+  .btn-primary:hover{ background:var(--copper-bright); transform:translateY(-2px); }
+  .btn-ghost{
+    font-family:var(--mono);
+    font-size:0.85rem;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    border:1px solid var(--line);
+    color:var(--bone);
+    padding:15px 26px;
+    transition:border-color .2s ease;
+  }
+  .btn-ghost:hover{ border-color:var(--bone-dim); }
+
+  /* Spec card - the signature element */
+  .spec-card{
+    background:var(--ink-soft);
+    border:1px solid var(--line);
+    font-family:var(--mono);
+    font-size:0.8rem;
+  }
+  .spec-card-head{
+    padding:14px 18px;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:var(--bone-dim);
+    letter-spacing:0.06em;
+    font-size:0.7rem;
+    text-transform:uppercase;
+  }
+  .spec-card-head .dot{
+    width:7px; height:7px;
+    border-radius:50%;
+    background:var(--pcb-green);
+    box-shadow:0 0 0 3px rgba(92,122,94,0.2);
+  }
+  .spec-row{
+    display:flex;
+    justify-content:space-between;
+    padding:13px 18px;
+    border-bottom:1px solid var(--line);
+  }
+  .spec-row:last-child{ border-bottom:none; }
+  .spec-row span:first-child{ color:var(--bone-dim); }
+  .spec-row span:last-child{ color:var(--bone); text-align:right; }
+  .spec-row .accent{ color:var(--copper-bright); }
+
+  /* ===== SECTION HEADERS ===== */
+  .section{ padding:90px 0; position:relative; }
+  .section-head{
+    margin-bottom:54px;
+    max-width:60ch;
+  }
+  .section-tag{
+    font-family:var(--mono);
+    font-size:0.75rem;
+    color:var(--copper);
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+  }
+  .section h2{
+    font-family:var(--sans);
+    font-weight:800;
+    font-size:clamp(1.8rem, 3.4vw, 2.6rem);
+    text-transform:uppercase;
+    letter-spacing:-0.01em;
+    line-height:1.1;
+  }
+  .section-desc{
+    color:var(--bone-dim);
+    margin-top:16px;
+    font-size:1rem;
+  }
+
+  /* ===== SERVICES ===== */
+  .services{
+    border-top:1px solid var(--line);
+  }
+  .service-list{
+    display:flex;
+    flex-direction:column;
+  }
+  .service-row{
+    display:grid;
+    grid-template-columns: 140px 1fr 1fr;
+    gap:30px;
+    padding:36px 0;
+    border-bottom:1px solid var(--line);
+    transition:background .2s ease;
+  }
+  .service-row:hover{ background:rgba(212,117,58,0.04); }
+  .service-code{
+    font-family:var(--mono);
+    color:var(--copper);
+    font-size:0.85rem;
+    letter-spacing:0.04em;
+    padding-top:4px;
+  }
+  .service-code span{
+    display:block;
+    color:var(--bone-dim);
+    font-size:0.7rem;
+    margin-top:4px;
+  }
+  .service-name{
+    font-family:var(--sans);
+    font-weight:700;
+    font-size:1.3rem;
+    text-transform:uppercase;
+    letter-spacing:-0.01em;
+  }
+  .service-desc{
+    color:var(--bone-dim);
+    font-size:0.95rem;
+  }
+  .service-desc ul{
+    list-style:none;
+    margin-top:10px;
+  }
+  .service-desc li{
+    font-family:var(--mono);
+    font-size:0.78rem;
+    color:var(--bone-dim);
+    padding-left:16px;
+    position:relative;
+    margin-bottom:6px;
+  }
+  .service-desc li::before{
+    content:'›';
+    position:absolute;
+    left:0;
+    color:var(--pcb-green);
+  }
+
+  /* ===== PROCESS STRIP ===== */
+  .process{
+    background:var(--ink-soft);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .process-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:0;
+  }
+  .process-step{
+    padding:40px 24px;
+    border-right:1px solid var(--line);
+  }
+  .process-step:last-child{ border-right:none; }
+  .process-num{
+    font-family:var(--mono);
+    color:var(--copper);
+    font-size:0.75rem;
+    margin-bottom:14px;
+  }
+  .process-step h3{
+    font-family:var(--sans);
+    font-size:1.05rem;
+    text-transform:uppercase;
+    margin-bottom:10px;
+    font-weight:700;
+  }
+  .process-step p{
+    color:var(--bone-dim);
+    font-size:0.87rem;
+  }
+
+  /* ===== CONTACT ===== */
+  .contact-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:60px;
+    align-items:start;
+  }
+  .contact-info p{
+    color:var(--bone-dim);
+    margin-bottom:30px;
+    max-width:42ch;
+  }
+  .contact-channel{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    padding:16px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .contact-channel .label{
+    font-family:var(--mono);
+    font-size:0.7rem;
+    color:var(--bone-dim);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    width:90px;
+    flex-shrink:0;
+  }
+  .contact-channel a, .contact-channel span.val{
+    font-family:var(--mono);
+    font-size:0.95rem;
+    color:var(--bone);
+  }
+  .contact-channel a:hover{ color:var(--copper-bright); }
+
+  form{
+    background:var(--ink-soft);
+    border:1px solid var(--line);
+    padding:30px;
+  }
+  .form-row{ margin-bottom:20px; }
+  label{
+    display:block;
+    font-family:var(--mono);
+    font-size:0.7rem;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--bone-dim);
+    margin-bottom:8px;
+  }
+  input, select, textarea{
+    width:100%;
+    background:var(--ink);
+    border:1px solid var(--line);
+    color:var(--bone);
+    padding:12px 14px;
+    font-family:var(--sans);
+    font-size:0.95rem;
+  }
+  input:focus, select:focus, textarea:focus{
+    outline:none;
+    border-color:var(--copper);
+  }
+  textarea{ resize:vertical; min-height:100px; }
+  .form-submit{
+    width:100%;
+    font-family:var(--mono);
+    font-size:0.85rem;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    background:var(--copper);
+    color:var(--ink);
+    padding:15px;
+    font-weight:700;
+    border:none;
+    cursor:pointer;
+    transition:background .2s ease;
+  }
+  .form-submit:hover{ background:var(--copper-bright); }
+  .form-submit:disabled{ opacity:0.65; cursor:not-allowed; }
+  .form-note{
+    font-family:var(--mono);
+    font-size:0.72rem;
+    color:var(--bone-dim);
+    margin-top:14px;
+    text-align:center;
+  }
+
+  /* ===== FOOTER ===== */
+  footer{
+    border-top:1px solid var(--line);
+    padding:34px 0;
+  }
+  .foot-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:var(--mono);
+    font-size:0.75rem;
+    color:var(--bone-dim);
+    flex-wrap:wrap;
+    gap:14px;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 880px){
+    .navlinks{ display:none; }
+    .hero-grid{ grid-template-columns:1fr; }
+    .hero-bg img{ opacity:0.35; }
+    .process-grid{ grid-template-columns:1fr 1fr; }
+    .process-step{ border-right:none; border-bottom:1px solid var(--line); }
+    .contact-grid{ grid-template-columns:1fr; }
+    .service-row{ grid-template-columns:1fr; gap:10px; }
+    .service-code{ padding-top:0; }
+  }
+  @media (max-width: 480px){
+    .process-grid{ grid-template-columns:1fr; }
+    .hero{ padding:70px 0 56px; }
+    .section{ padding:64px 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ scroll-behavior:auto !important; transition:none !important; }
+  }
+
+  /* focus visibility */
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
+    outline:2px solid var(--copper-bright);
+    outline-offset:2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="pcb-bg"></div>
+
+<header>
+  <div class="wrap nav">
+    <div class="logo">
+      <img src="assets/logo-cropped.png" alt="Addictech" class="logo-img">
+      <div>
+        ADDICTECH
+        <small>HARDWARE · ALTO RENDIMIENTO</small>
+      </div>
+    </div>
+    <nav class="navlinks">
+      <a href="#servicios">Servicios</a>
+      <a href="#proceso">Proceso</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <a href="#contacto" class="nav-cta">Cotizar equipo</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg">
+      <img src="assets/case-illustration.svg" alt="" aria-hidden="true">
+    </div>
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow">Asesoría · Configuración · Ensamble</div>
+        <h1>Equipos de <em>alto rendimiento</em>, armados a tu medida</h1>
+        <p class="hero-sub">Te ayudo a elegir los componentes correctos, configurar el sistema desde cero y ensamblar tu equipo para gaming, edición, desarrollo o trabajo profesional. Sin relleno, sin sobreprecio: el equipo que de verdad necesitas.</p>
+        <div class="hero-actions">
+          <a href="#contacto" class="btn-primary">Solicitar asesoría</a>
+          <a href="#servicios" class="btn-ghost">Ver servicios</a>
+        </div>
+      </div>
+
+      <div class="spec-card">
+        <div class="spec-card-head">
+          <span>Ficha · Servicio Base</span>
+          <span class="dot"></span>
+        </div>
+        <div class="spec-row"><span>Diagnóstico de uso</span><span class="accent">Incluido</span></div>
+        <div class="spec-row"><span>Selección de componentes</span><span>Compatibilidad verificada</span></div>
+        <div class="spec-row"><span>Ensamble físico</span><span>Cableado + gestión térmica</span></div>
+        <div class="spec-row"><span>Instalación de SO</span><span>Windows / Linux</span></div>
+        <div class="spec-row"><span>Pruebas de estrés</span><span>CPU / GPU / RAM</span></div>
+        <div class="spec-row"><span>Tiempo estimado</span><span class="accent">2–5 días hábiles</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICIOS -->
+  <section class="section services" id="servicios">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="section-tag">// Lo que hago</div>
+        <h2>Servicios</h2>
+        <p class="section-desc">Tres formas de trabajar juntos, según qué tan involucrado quieras estar en cada decisión.</p>
+      </div>
+
+      <div class="service-list">
+
+        <div class="service-row">
+          <div class="service-code">SVC-ASR<span>Asesoría</span></div>
+          <div class="service-name">Asesoría técnica</div>
+          <div class="service-desc">
+            Te oriento sobre qué componentes comprar según tu presupuesto y uso real (gaming, edición de video, IA, oficina pesada), evitando cuellos de botella y gasto innecesario.
+            <ul>
+              <li>Recomendación de componentes por presupuesto</li>
+              <li>Revisión de compatibilidad antes de comprar</li>
+              <li>Comparativas de relación precio/rendimiento</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="service-row">
+          <div class="service-code">SVC-CFG<span>Configuración</span></div>
+          <div class="service-name">Configuración de sistema</div>
+          <div class="service-desc">
+            Dejo tu equipo listo para usar: sistema operativo, drivers, optimización de rendimiento y software base instalado correctamente.
+            <ul>
+              <li>Instalación de Windows o Linux</li>
+              <li>Drivers, BIOS y overclock seguro</li>
+              <li>Optimización de arranque y temperaturas</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="service-row">
+          <div class="service-code">SVC-ENS<span>Ensamble</span></div>
+          <div class="service-name">Ensamble de equipos</div>
+          <div class="service-desc">
+            Armo tu PC desde cero: cableado limpio, gestión térmica adecuada y pruebas de estabilidad antes de entregarlo.
+            <ul>
+              <li>Montaje físico y cableado prolijo</li>
+              <li>Gestión de flujo de aire y temperaturas</li>
+              <li>Pruebas de estrés antes de la entrega</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESO -->
+  <section class="process" id="proceso">
+    <div class="wrap">
+      <div class="section-head" style="margin-bottom:0; padding:64px 0 0;">
+        <div class="section-tag">// Cómo trabajo</div>
+        <h2>Proceso</h2>
+      </div>
+      <div class="process-grid">
+        <div class="process-step">
+          <div class="process-num">PASO 1</div>
+          <h3>Diagnóstico</h3>
+          <p>Conversamos sobre tu uso, presupuesto y prioridades de rendimiento.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num">PASO 2</div>
+          <h3>Propuesta</h3>
+          <p>Te envío la lista de componentes recomendados y el costo estimado.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num">PASO 3</div>
+          <h3>Ensamble</h3>
+          <p>Armo y configuro el equipo con pruebas de estabilidad incluidas.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num">PASO 4</div>
+          <h3>Entrega</h3>
+          <p>Recibes el equipo listo para usar, con explicación de lo instalado.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section class="section" id="contacto">
+    <div class="wrap contact-grid">
+      <div class="contact-info">
+        <div class="section-tag">// Hablemos</div>
+        <h2>Contacto</h2>
+        <p style="margin-top:16px;">Cuéntame qué necesitas y te respondo con una propuesta inicial. También puedes escribirme directo por estos canales.</p>
+
+        <div class="contact-channel">
+          <span class="label">Email</span>
+          <a href="mailto:addictech@icloud.com">addictech@icloud.com</a>
+        </div>
+        <div class="contact-channel">
+          <span class="label">WhatsApp</span>
+          <a href="https://wa.me/573105028952?text=Hola%2C%20vi%20tu%20p%C3%A1gina%20web%20y%20me%20interesa%20una%20asesor%C3%ADa%20para%20mi%20equipo." target="_blank" rel="noopener">+57 310 502 8952</a>
+        </div>
+        <div class="contact-channel">
+          <span class="label">Ubicación</span>
+          <span class="val">La Ceja, Antioquia, CO</span>
+        </div>
+      </div>
+
+      <form id="contact-form">
+        <input type="hidden" name="access_key" value="5831e678-df00-43f7-a655-4df4c792b533">
+        <input type="hidden" name="subject" value="Nuevo contacto desde la web de Addictech">
+        <input type="hidden" name="from_name" value="Addictech — Formulario web">
+        <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+
+        <div class="form-row">
+          <label for="nombre">Nombre</label>
+          <input type="text" id="nombre" name="nombre" required>
+        </div>
+        <div class="form-row">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-row">
+          <label for="servicio">Servicio de interés</label>
+          <select id="servicio" name="servicio">
+            <option>Asesoría técnica</option>
+            <option>Configuración de sistema</option>
+            <option>Ensamble de equipo</option>
+            <option>No estoy seguro</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="mensaje">Cuéntame qué necesitas</label>
+          <textarea id="mensaje" name="mensaje" required></textarea>
+        </div>
+        <button type="submit" class="form-submit" id="form-submit-btn">Enviar mensaje</button>
+        <p class="form-note" id="form-note">Te respondo normalmente en menos de 24 horas hábiles</p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function(){
+  var form = document.getElementById('contact-form');
+  var btn = document.getElementById('form-submit-btn');
+  var note = document.getElementById('form-note');
+  var noteDefault = note.textContent;
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    btn.disabled = true;
+    btn.textContent = 'Enviando…';
+    note.textContent = noteDefault;
+    note.style.color = '';
+
+    var formData = new FormData(form);
+    var payload = Object.fromEntries(formData.entries());
+
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(function(res){ return res.json(); })
+    .then(function(data){
+      if (data.success) {
+        form.reset();
+        btn.textContent = 'Mensaje enviado ✓';
+        note.textContent = 'Gracias, te responderé pronto a tu correo.';
+      } else {
+        throw new Error(data.message || 'Error desconocido');
+      }
+    })
+    .catch(function(err){
+      btn.textContent = 'Enviar mensaje';
+      btn.disabled = false;
+      note.textContent = 'No se pudo enviar. Intenta de nuevo o escríbeme directo por WhatsApp.';
+      note.style.color = '#c46a4a';
+    });
+  });
+})();
+</script>
+
+<footer>
+  <div class="wrap foot-row">
+    <span>© 2026 Addictech — Hardware de alto rendimiento</span>
+    <span>La Ceja, Antioquia, Colombia</span>
+  </div>
+</footer>
+
+<!-- Botón flotante WhatsApp -->
+<a href="https://wa.me/573105028952?text=Hola%2C%20vi%20tu%20p%C3%A1gina%20web%20y%20me%20interesa%20una%20asesor%C3%ADa%20para%20mi%20equipo." 
+   target="_blank" rel="noopener" class="wa-float" aria-label="Contactar por WhatsApp">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" fill="white">
+    <path d="M16 0C7.163 0 0 7.163 0 16c0 2.822.736 5.469 2.027 7.77L0 32l8.43-2.01A15.93 15.93 0 0 0 16 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm0 29.333a13.27 13.27 0 0 1-6.756-1.845l-.484-.287-5.007 1.194 1.234-4.874-.316-.5A13.267 13.267 0 0 1 2.667 16C2.667 8.636 8.636 2.667 16 2.667S29.333 8.636 29.333 16 23.364 29.333 16 29.333zm7.27-9.862c-.398-.199-2.354-1.161-2.719-1.294-.365-.133-.63-.199-.896.199-.265.398-1.029 1.294-1.261 1.56-.232.265-.465.298-.863.1-.398-.2-1.681-.619-3.203-1.977-1.184-1.056-1.983-2.36-2.215-2.758-.232-.398-.025-.613.174-.811.179-.178.398-.465.597-.697.199-.233.265-.399.398-.665.133-.265.066-.498-.033-.697-.1-.199-.896-2.16-1.228-2.957-.323-.776-.651-.671-.896-.683l-.763-.013c-.265 0-.697.1-.1063.498-.365.398-1.394 1.362-1.394 3.322s1.428 3.854 1.627 4.12c.199.265 2.81 4.29 6.808 6.018.951.41 1.694.656 2.272.839.954.304 1.823.261 2.51.158.766-.114 2.354-.962 2.686-1.891.332-.929.332-1.726.232-1.891-.099-.166-.365-.265-.763-.464z"/>
+  </svg>
+  <span class="wa-tooltip">¿Hablamos?</span>
+</a>
+
+<style>
+.wa-float{
+  position:fixed;
+  bottom:28px;
+  right:28px;
+  z-index:999;
+  width:58px; height:58px;
+  background:#25D366;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow: 0 4px 20px rgba(37,211,102,0.45);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.wa-float:hover{
+  transform: scale(1.1);
+  box-shadow: 0 6px 28px rgba(37,211,102,0.6);
+}
+.wa-float svg{ flex-shrink:0; }
+.wa-tooltip{
+  position:absolute;
+  right:68px;
+  background:#1A1B22;
+  color:#F2F1EA;
+  font-family:'Courier New', monospace;
+  font-size:0.75rem;
+  letter-spacing:0.04em;
+  padding:7px 12px;
+  white-space:nowrap;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s ease;
+  border:1px solid rgba(242,241,234,0.12);
+}
+.wa-tooltip::after{
+  content:'';
+  position:absolute;
+  right:-6px; top:50%;
+  transform:translateY(-50%);
+  border:6px solid transparent;
+  border-right:none;
+  border-left-color:#1A1B22;
+}
+.wa-float:hover .wa-tooltip{ opacity:1; }
+
+/* Pulso de atención */
+@keyframes wa-pulse{
+  0%  { box-shadow: 0 0 0 0 rgba(37,211,102,0.5); }
+  70% { box-shadow: 0 0 0 14px rgba(37,211,102,0); }
+  100%{ box-shadow: 0 0 0 0 rgba(37,211,102,0); }
+}
+.wa-float{ animation: wa-pulse 2.5s ease-out 3s 3; }
+</style>
+
+</body>
+</html>
